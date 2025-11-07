@@ -28,3 +28,19 @@ export interface User {
 }
 
 export type PlaygroundAction = (typeof playgroundActions)[number];
+
+export type Projects = Project[];
+export interface Project {
+	id: string;
+	number: number;
+	title: string;
+	url: string;
+	closed: boolean;
+	createdAt: string;
+}
+
+export interface ProjectDetail {
+	project_name: string;
+	total_items: number;
+	status: Record<string, number>;
+}

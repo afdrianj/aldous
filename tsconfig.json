@@ -1,6 +1,10 @@
 {
-  "extends": "astro/tsconfigs/strictest",
+  "extends": "astro/tsconfigs/base",
   "compilerOptions": {
-    "strictNullChecks": true
+    // Keep strict type-checking
+    "strict": true,
+    "strictNullChecks": true,
+    // Replace removed `importsNotUsedAsValues` behavior
+    "verbatimModuleSyntax": true
   }
 }

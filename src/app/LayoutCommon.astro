@@ -3,6 +3,7 @@ import pkg from '../../package.json' assert { type: 'json' };
 import { url } from '../lib/data.js';
 
 import { SITE_TITLE } from './constants.js';
+import mbizLogo from '../assets/mbiz-logo.png';
 
 const { class: clazz } = Astro.props;
 ---
@@ -17,7 +18,7 @@ const { class: clazz } = Astro.props;
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={pkg.description} />
 		<meta name="" content={pkg.description} />
-		<link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
+		<link rel="icon" type="image/png" href={mbizLogo} />
 		<link
 			rel="sitemap"
 			type="application/xml"

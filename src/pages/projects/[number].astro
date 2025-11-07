@@ -1,0 +1,10 @@
+---
+import LayoutSidebar from '../../app/LayoutSidebar.astro';
+import ProjectDetail from '../../modules/ProjectDetail.astro';
+
+const { number } = Astro.params;
+---
+
+<LayoutSidebar>
+	<ProjectDetail projectNumber={number} />
+</LayoutSidebar>

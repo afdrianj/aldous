@@ -2,8 +2,8 @@
 // _
 ---
 
-<form action="#" method="GET" class="hidden lg:block lg:pl-3.5">
-	<label for="topbar-search" class="sr-only">Search</label>
+<div class="hidden lg:block lg:pl-3.5">
+	<label for="topbar-search" class="sr-only">Search Projects</label>
 	<div class="relative mt-1 lg:w-96">
 		<div
 			class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
@@ -21,10 +21,58 @@
 		</div>
 		<input
 			type="text"
-			name="email"
 			id="topbar-search"
 			class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-			placeholder="Search"
+			placeholder="Search projects..."
 		/>
 	</div>
-</form>
+</div>
+
+<script>
+	const searchInput = document.getElementById('topbar-search') as HTMLInputElement;
+	const searchInputMobile = document.getElementById('topbar-search-mobile') as HTMLInputElement;
+	const mobileSearchContainer = document.getElementById('mobile-search');
+	const toggleMobileSearchButton = document.getElementById('toggleSidebarMobileSearch');
+
+	// Function to filter projects
+	function filterProjects(searchTerm: string) {
+		const projectCards = document.querySelectorAll('a[href^="/projects/"]');
+
+		projectCards.forEach((card) => {
+			const title = card.querySelector('h5')?.textContent?.toLowerCase() || '';
+			const projectNumber = card.querySelector('p')?.textContent?.toLowerCase() || '';
+
+			if (title.includes(searchTerm) || projectNumber.includes(searchTerm)) {
+				(card as HTMLElement).style.display = 'block';
+			} else {
+				(card as HTMLElement).style.display = 'none';
+			}
+		});
+	}
+
+	// Desktop search
+	if (searchInput) {
+		searchInput.addEventListener('input', (e) => {
+			const searchTerm = (e.target as HTMLInputElement).value.toLowerCase();
+			filterProjects(searchTerm);
+		});
+	}
+
+	// Mobile search
+	if (searchInputMobile) {
+		searchInputMobile.addEventListener('input', (e) => {
+			const searchTerm = (e.target as HTMLInputElement).value.toLowerCase();
+			filterProjects(searchTerm);
+		});
+	}
+
+	// Toggle mobile search
+	if (toggleMobileSearchButton && mobileSearchContainer) {
+		toggleMobileSearchButton.addEventListener('click', () => {
+			mobileSearchContainer.classList.toggle('hidden');
+			if (!mobileSearchContainer.classList.contains('hidden')) {
+				searchInputMobile?.focus();
+			}
+		});
+	}
+</script>

@@ -1,12 +1,12 @@
 {
-	"name": "flowbite-astro-admin-dashboard",
+	"name": "mbiz-projects-dashboard",
 	"version": "1.0.2",
 	"private": "true",
-	"description": "A free and open-source admin dashboard template built with Tailwind CSS, Flowbite and Astro",
+	"description": "A free and open-source admin dashboard template built with Tailwind CSS, Mbiz and Astro",
 	"keywords": [
 		"tailwind",
 		"tailwind css",
-		"flowbite",
+		"mbiz",
 		"admin dashboard",
 		"dashboard ui",
 		"admin dashboard template",
@@ -17,9 +17,9 @@
 		"astro-template",
 		"javascript"
 	],
-	"homepage": "https://flowbite.com",
-	"bugs": "https://github.com/themesberg/flowbite-astro-admin-dashboard/issues",
-	"repository": "https://github.com/themesberg/flowbite-astro-admin-dashboard.git",
+	"homepage": "https://mbiz.com",
+	"bugs": "https://github.com/themesberg/mbiz-projects-dashboard/issues",
+	"repository": "https://github.com/themesberg/mbiz-projects-dashboard.git",
 	"license": "MIT",
 	"author": "Bergside Inc.",
 	"contributors": [
@@ -41,8 +41,8 @@
 		"@faker-js/faker": "^7.6.0",
 		"apexcharts": "^3.37.2",
 		"astro": "^2.0.4",
-		"flowbite": "^2.1.1",
-		"flowbite-typography": "^1.0.3",
+		"mbiz": "^2.1.1",
+		"mbiz-typography": "^1.0.3",
 		"shiki": "^0.14.1",
 		"tailwind-scrollbar": "^3.0.0",
 		"tailwindcss": "^3.0.24"
