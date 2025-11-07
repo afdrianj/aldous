@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import { loadEnv } from 'vite';
 
+import node from '@astrojs/node';
 import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
 
@@ -17,6 +18,9 @@ export default defineConfig({
 	// base: '/your-base-path', // Uncomment jika deploy di subdirectory
 
 	output: 'server',
+	adapter: node({
+		mode: 'standalone',
+	}),
 
 	/* Like Vercel, Netlify,… Mimicking for dev. server */
 	// trailingSlash: 'always',
