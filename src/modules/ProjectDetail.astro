@@ -180,7 +180,7 @@ try {
 		</div>
 
 		<!-- Charts Grid -->
-		<div class="grid grid-cols-1 gap-4 xl:grid-cols-2">
+		<div class="grid grid-cols-1 gap-4 mb-4 xl:grid-cols-2">
 			<!-- Line Chart -->
 			<div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
 				<div class="flex items-center justify-between mb-4">
@@ -194,40 +194,41 @@ try {
 				<div class="flex items-center justify-between mb-4">
 					<h3 class="text-lg font-semibold text-gray-900 dark:text-white">Donut Chart</h3>
 				</div>
-			<div id="donut-chart"></div>
+				<div id="donut-chart"></div>
 			</div>
-		</div>
-</div>
-	<!-- Additional Charts Grid -->
-	<div class="grid grid-cols-1 gap-4 xl:grid-cols-2">
-		<!-- Pie Chart -->
-		<div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-			<div class="flex items-center justify-between mb-4">
-				<div class="flex-shrink-0">
-					<span class="text-xl font-bold leading-none text-gray-900 sm:text-2xl dark:text-white">
-						{project.total_items}
-					</span>
-					<h3 class="text-base font-light text-gray-500 dark:text-gray-400">
-						Pie Chart
-					</h3>
-				</div>
-			</div>
-			<div id="pie-chart"></div>
 		</div>
 
-	<!-- Colored Bar Chart -->
-		<div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-			<div class="flex items-center justify-between mb-4">
-				<div class="flex-shrink-0">
-					<span class="text-xl font-bold leading-none text-gray-900 sm:text-2xl dark:text-white">
-						{project.total_items}
-					</span>
-					<h3 class="text-base font-light text-gray-500 dark:text-gray-400">
-						Colored Bar Chart
-					</h3>
+		<!-- Additional Charts Grid -->
+		<div class="grid grid-cols-1 gap-4 xl:grid-cols-2">
+			<!-- Pie Chart -->
+			<div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+				<div class="flex items-center justify-between mb-4">
+					<div class="flex-shrink-0">
+						<span class="text-xl font-bold leading-none text-gray-900 sm:text-2xl dark:text-white">
+							{project.total_items}
+						</span>
+						<h3 class="text-base font-light text-gray-500 dark:text-gray-400">
+							Pie Chart
+						</h3>
+					</div>
 				</div>
+				<div id="pie-chart"></div>
 			</div>
-			<div id="colored-bar-chart"></div>
+
+			<!-- Colored Bar Chart -->
+			<div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+				<div class="flex items-center justify-between mb-4">
+					<div class="flex-shrink-0">
+						<span class="text-xl font-bold leading-none text-gray-900 sm:text-2xl dark:text-white">
+							{project.total_items}
+						</span>
+						<h3 class="text-base font-light text-gray-500 dark:text-gray-400">
+							Colored Bar Chart
+						</h3>
+					</div>
+				</div>
+				<div id="colored-bar-chart"></div>
+			</div>
 		</div>
 	</div>
 )}

@@ -1,7 +1,5 @@
 ---
 /* eslint max-lines: 'off' */
-
-import { url } from '../lib/data.js';
 ---
 
 <!-- TODO: Dynamic dropdowns -->
@@ -54,7 +52,7 @@ import { url } from '../lib/data.js';
 					</li>
 					<li>
 						<a
-							href={url()}
+							href="/"
 							class="flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700"
 						>
 							<svg
@@ -71,7 +69,28 @@ import { url } from '../lib/data.js';
 									d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z"
 								></path>
 							</svg>
-							<span class="ml-3" sidebar-toggle-item>Welcome</span>
+							<span class="ml-3" sidebar-toggle-item>Home</span>
+						</a>
+					</li>
+					<li>
+						<a
+							href="/about"
+							class="flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700"
+						>
+							<svg
+								fill="currentColor"
+								class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+								aria-hidden="true"
+							>
+								<path
+									fill-rule="evenodd"
+									d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+									clip-rule="evenodd"
+								></path>
+							</svg>
+							<span class="ml-3" sidebar-toggle-item>About</span>
 						</a>
 					</li>
 				
