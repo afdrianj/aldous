@@ -1,7 +1,6 @@
 import ApexCharts from 'apexcharts';
 
-// Wait for DOM to be ready
-if (typeof window !== 'undefined') {
+function initializeCharts() {
 	// Get project data from data attribute
 	const projectDetailElement = document.getElementById('project-detail-data');
 
@@ -26,8 +25,7 @@ if (typeof window !== 'undefined') {
 				'Backlog',
 			];
 
-			const sortStatusEntries = (entries: [string, number][]) => {
-				return entries.sort((a, b) => {
+			const sortStatusEntries = (entries: [string, number][]) => entries.sort((a, b) => {
 					const indexA = statusOrder.findIndex(status =>
 						a[0].toLowerCase().includes(status.toLowerCase()) ||
 						status.toLowerCase().includes(a[0].toLowerCase())
@@ -42,11 +40,10 @@ if (typeof window !== 'undefined') {
 					if (indexB !== -1) return 1;
 					return a[0].localeCompare(b[0]);
 				});
-			};
 
 			const sortedEntries = sortStatusEntries(Object.entries(statusData));
 			const labels = sortedEntries.map(([key]) => key);
-			const values = sortedEntries.map(([, value]) => value as number);
+			const values = sortedEntries.map(([, value]) => value );
 			const colors = ['#1A56DB', '#16BDCA', '#FDBA8C', '#E74694', '#9061F9', '#31C48D'];
 
 			const getChartColors = () => {
@@ -71,7 +68,11 @@ if (typeof window !== 'undefined') {
 			const chartColors = getChartColors();
 
 			// Line Chart
-			if (document.getElementById('line-chart')) {
+            const lineChartElement = document.getElementById('line-chart');
+			if (lineChartElement) {
+                // Clear previous chart if any
+                lineChartElement.innerHTML = ''; 
+
 				const areaOptions = {
 					chart: {
 						height: 420,
@@ -99,9 +100,9 @@ if (typeof window !== 'undefined') {
 							fontFamily: 'Inter, sans-serif',
 						},
 						y: {
-							formatter: function(value: number) {
+							formatter(value: number) {
 								const percentage = ((value / totalItems) * 100).toFixed(1);
-								return value + ' items (' + percentage + '%)';
+								return `${value  } items (${  percentage  }%)`;
 							}
 						}
 					},
@@ -157,7 +158,7 @@ if (typeof window !== 'undefined') {
 					},
 				};
 
-				const areaChart = new ApexCharts(document.getElementById('line-chart'), areaOptions);
+				const areaChart = new ApexCharts(lineChartElement, areaOptions);
 				areaChart.render();
 
 				document.addEventListener('dark-mode', () => {
@@ -189,7 +190,9 @@ if (typeof window !== 'undefined') {
 
 
 			// Colored Bar Chart
-			if (document.getElementById('colored-bar-chart')) {
+            const coloredBarChartElement = document.getElementById('colored-bar-chart');
+			if (coloredBarChartElement) {
+                coloredBarChartElement.innerHTML = '';
 				const barOptions = {
 					colors: colors.slice(0, labels.length),
 					series: [{
@@ -220,9 +223,9 @@ if (typeof window !== 'undefined') {
 							fontFamily: 'Inter, sans-serif',
 						},
 						y: {
-							formatter: function(value: number) {
+							formatter(value: number) {
 								const percentage = ((value / totalItems) * 100).toFixed(1);
-								return value + ' items (' + percentage + '%)';
+								return `${value  } items (${  percentage  }%)`;
 							}
 						}
 					},
@@ -275,7 +278,7 @@ if (typeof window !== 'undefined') {
 					},
 				};
 
-				const barChart = new ApexCharts(document.getElementById('colored-bar-chart'), barOptions);
+				const barChart = new ApexCharts(coloredBarChartElement, barOptions);
 				barChart.render();
 
 				document.addEventListener('dark-mode', () => {
@@ -291,11 +294,13 @@ if (typeof window !== 'undefined') {
 			}
 
 			// Donut Chart
-			if (document.getElementById('donut-chart')) {
+            const donutChartElement = document.getElementById('donut-chart');
+			if (donutChartElement) {
+                donutChartElement.innerHTML = '';
 				const donutOptions = {
 					series: values,
-					labels: labels,
-					colors: colors,
+					labels,
+					colors,
 					chart: {
 						type: 'donut' as const,
 						height: 350,
@@ -341,9 +346,9 @@ if (typeof window !== 'undefined') {
 							fontFamily: 'Inter, sans-serif',
 						},
 						y: {
-							formatter: function(value: number) {
+							formatter(value: number) {
 								const percentage = ((value / totalItems) * 100).toFixed(1);
-								return value + ' items (' + percentage + '%)';
+								return `${value  } items (${  percentage  }%)`;
 							}
 						}
 					},
@@ -356,7 +361,7 @@ if (typeof window !== 'undefined') {
 					},
 				};
 
-				const donutChart = new ApexCharts(document.getElementById('donut-chart'), donutOptions);
+				const donutChart = new ApexCharts(donutChartElement, donutOptions);
 				donutChart.render();
 
 				document.addEventListener('dark-mode', () => {
@@ -373,86 +378,101 @@ if (typeof window !== 'undefined') {
 					});
 				});
 			}
-		// Pie Chart
-		if (document.getElementById('pie-chart')) {
-			const pieOptions = {
-				series: values,
-				labels: labels,
-				colors: colors,
-				chart: {
-					type: 'pie' as const,
-					height: 350,
-					fontFamily: 'Inter, sans-serif',
-					toolbar: {
-						show: false,
-					},
-				},
-				stroke: {
-					colors: [chartColors.strokeColor],
-				},
-				legend: {
-					position: 'bottom' as const,
-					fontFamily: 'Inter, sans-serif',
-					labels: {
-						colors: document.documentElement.classList.contains('dark') ? '#E5E7EB' : '#374151',
-						useSeriesColors: false,
-					},
-					markers: {
-						fillColors: colors,
-					},
-				},
-				dataLabels: {
-					enabled: true,
-					style: {
-						fontFamily: 'Inter, sans-serif',
-						fontSize: '14px',
-						fontWeight: 600,
-						colors: ['#fff'],
-					},
-					dropShadow: {
-						enabled: true,
-						top: 1,
-						left: 1,
-						blur: 1,
-						color: '#000',
-						opacity: 0.45,
-					},
-				},
-				tooltip: {
-					style: {
-						fontSize: '14px',
-						fontFamily: 'Inter, sans-serif',
-					},
-					y: {
-						formatter: function(value: number) {
-							const percentage = ((value / totalItems) * 100).toFixed(1);
-							return value + ' items (' + percentage + '%)';
-						}
-					}
-				},
-			};
+            
+            // Pie Chart
+            const pieChartElement = document.getElementById('pie-chart');
+            if (pieChartElement) {
+                pieChartElement.innerHTML = '';
+                const pieOptions = {
+                    series: values,
+                    labels,
+                    colors,
+                    chart: {
+                        type: 'pie' as const,
+                        height: 350,
+                        fontFamily: 'Inter, sans-serif',
+                        toolbar: {
+                            show: false,
+                        },
+                    },
+                    stroke: {
+                        colors: [chartColors.strokeColor],
+                    },
+                    legend: {
+                        position: 'bottom' as const,
+                        fontFamily: 'Inter, sans-serif',
+                        labels: {
+                            colors: document.documentElement.classList.contains('dark') ? '#E5E7EB' : '#374151',
+                            useSeriesColors: false,
+                        },
+                        markers: {
+                            fillColors: colors,
+                        },
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        style: {
+                            fontFamily: 'Inter, sans-serif',
+                            fontSize: '14px',
+                            fontWeight: 600,
+                            colors: ['#fff'],
+                        },
+                        dropShadow: {
+                            enabled: true,
+                            top: 1,
+                            left: 1,
+                            blur: 1,
+                            color: '#000',
+                            opacity: 0.45,
+                        },
+                    },
+                    tooltip: {
+                        style: {
+                            fontSize: '14px',
+                            fontFamily: 'Inter, sans-serif',
+                        },
+                        y: {
+                            formatter(value: number) {
+                                const percentage = ((value / totalItems) * 100).toFixed(1);
+                                return `${value  } items (${  percentage  }%)`;
+                            }
+                        }
+                    },
+                };
 
-			const pieChart = new ApexCharts(
-				document.getElementById('pie-chart'),
-				pieOptions,
-			);
-			pieChart.render();
+                const pieChart = new ApexCharts(
+                    pieChartElement,
+                    pieOptions,
+                );
+                pieChart.render();
 
-			document.addEventListener('dark-mode', () => {
-				const newColors = getChartColors();
-				const isDark = document.documentElement.classList.contains('dark');
-				pieChart.updateOptions({
-					stroke: { colors: [newColors.strokeColor] },
-					legend: {
-						labels: {
-							colors: isDark ? '#E5E7EB' : '#374151',
-							useSeriesColors: false,
-						}
-					},
-				});
-			});
-		}
+                document.addEventListener('dark-mode', () => {
+                    const newColors = getChartColors();
+                    const isDark = document.documentElement.classList.contains('dark');
+                    pieChart.updateOptions({
+                        stroke: { colors: [newColors.strokeColor] },
+                        legend: {
+                            labels: {
+                                colors: isDark ? '#E5E7EB' : '#374151',
+                                useSeriesColors: false,
+                            }
+                        },
+                    });
+                });
+            }
 
 		}
 	}
+}
+
+// Initialize when DOM is ready (in case SSR somehow renders it)
+if (typeof window !== 'undefined') {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeCharts);
+    } else {
+        initializeCharts();
+    }
+    
+    // Listen for custom event from partial loading
+    document.addEventListener('project-content-loaded', initializeCharts);
 }

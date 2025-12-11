@@ -1,0 +1,25 @@
+---
+import ProjectDetailContent from '../../../components/ProjectDetailContent.astro';
+import type { ProjectDetail as ProjectDetailType } from '../../../types/entities';
+
+export const partial = true;
+
+const { projectNumber } = Astro.params;
+const API_BASE_URL = import.meta.env.PUBLIC_API_BASE_URL;
+
+let project: ProjectDetailType | null = null;
+let error: string | null = null;
+
+try {
+	const response = await fetch(`${API_BASE_URL}/projects/${projectNumber}`);
+	if (!response.ok) {
+		throw new Error(`HTTP error! status: ${response.status}`);
+	}
+	project = await response.json();
+} catch (e) {
+	error = e instanceof Error ? e.message : 'Failed to fetch project detail';
+	console.error('Error fetching project detail:', e);
+}
+---
+
+<ProjectDetailContent project={project} projectNumber={projectNumber || ''} error={error} />

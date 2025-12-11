@@ -1,75 +1,30 @@
 ---
-import type { Projects } from '../types/entities';
-
-const API_BASE_URL = import.meta.env.PUBLIC_API_BASE_URL;
-
-let projects: Projects = [];
-let error: string | null = null;
-
-try {
-	const response = await fetch(`${API_BASE_URL}/projects`);
-	if (!response.ok) {
-		throw new Error(`HTTP error! status: ${response.status}`);
-	}
-	projects = await response.json();
-} catch (e) {
-	error = e instanceof Error ? e.message : 'Failed to fetch projects';
-	console.error('Error fetching projects:', e);
-}
+import Loading from '../components/Loading.astro';
 ---
 
-<div class="p-4 bg-white block border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
-	<div class="mb-4">
-		<h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">
-			Mbiz Projects
-		</h1>
-		<p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-			Total {projects.length} projects
-		</p>
-	</div>
+<div id="projects-list-container">
+	<Loading />
 </div>
 
-{error && (
-	<div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-		<span class="font-medium">Error!</span> {error}
-	</div>
-)}
+<script>
+	async function loadProjects() {
+		const container = document.getElementById('projects-list-container');
+		if (!container) return;
 
-<div class="p-4">
-	<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-		{projects.map((project) => (
-			<a
-				href={`/projects/${project.number}`}
-				class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 transition-colors"
-			>
-				<div class="flex items-start justify-between mb-2">
-					<h5 class="text-lg font-semibold tracking-tight text-gray-900 dark:text-white flex-1">
-						{project.title}
-					</h5>
-					{project.closed ? (
-						<span class="ml-2 bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
-							Closed
-						</span>
-					) : (
-						<span class="ml-2 bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
-							Open
-						</span>
-					)}
+		try {
+			const response = await fetch('/partials/projects-list');
+			if (!response.ok) throw new Error('Failed to load projects');
+			const html = await response.text();
+			container.innerHTML = html;
+		} catch (error) {
+			console.error('Error loading projects:', error);
+			container.innerHTML = `
+				<div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+					<span class="font-medium">Error!</span> Failed to load projects. Please try again later.
 				</div>
+			`;
+		}
+	}
 
-				<div class="mt-4 space-y-2">
-					<p class="text-sm text-gray-500 dark:text-gray-400">
-						Project #{project.number}
-					</p>
-					<p class="text-sm text-gray-500 dark:text-gray-400">
-						Created: {new Date(project.createdAt).toLocaleDateString('id-ID', {
-							year: 'numeric',
-							month: 'short',
-							day: 'numeric'
-						})}
-					</p>
-				</div>
-			</a>
-		))}
-	</div>
-</div>
+	loadProjects();
+</script>

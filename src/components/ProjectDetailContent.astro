@@ -1,0 +1,241 @@
+---
+import type { ProjectDetail as ProjectDetailType } from '../types/entities';
+
+interface Props {
+	project: ProjectDetailType | null;
+	projectNumber: string;
+	error?: string | null;
+}
+
+const { project, projectNumber, error } = Astro.props;
+
+// Status order for sorting
+const statusOrder = [
+	'Production',
+	'Passed UAT',
+	'Testing In QA UAT',
+	'Ready For QA UAT',
+	'Passed Staging',
+	'Checking QA Staging',
+	'Ready For QA Staging',
+	'Done in Local',
+	'In Progress',
+	'Backlog',
+];
+
+const sortStatusEntries = (entries: [string, number][]) => entries.sort((a, b) => {
+		const indexA = statusOrder.findIndex(status =>
+			a[0].toLowerCase().includes(status.toLowerCase()) ||
+			status.toLowerCase().includes(a[0].toLowerCase())
+		);
+		const indexB = statusOrder.findIndex(status =>
+			b[0].toLowerCase().includes(status.toLowerCase()) ||
+			status.toLowerCase().includes(b[0].toLowerCase())
+		);
+
+		// If both found in order, sort by index
+		if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+		// If only A found, A comes first
+		if (indexA !== -1) return -1;
+		// If only B found, B comes first
+		if (indexB !== -1) return 1;
+		// If neither found, sort alphabetically
+		return a[0].localeCompare(b[0]);
+	});
+---
+
+<div class="p-4 bg-white block border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+	<div class="mb-4">
+		<nav class="flex mb-5" aria-label="Breadcrumb">
+			<ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
+				<li class="inline-flex items-center">
+					<a
+						href="/"
+						class="inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white"
+					>
+						<svg
+							class="w-5 h-5 mr-2.5"
+							fill="currentColor"
+							viewBox="0 0 20 20"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"
+							></path>
+						</svg>
+						Projects
+					</a>
+				</li>
+				<li>
+					<div class="flex items-center">
+						<svg
+							class="w-6 h-6 text-gray-400"
+							fill="currentColor"
+							viewBox="0 0 20 20"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								fill-rule="evenodd"
+								d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+								clip-rule="evenodd"
+								></path>
+						</svg>
+						<span class="ml-1 text-gray-400 md:ml-2 dark:text-gray-500" aria-current="page">
+							{project?.project_name || `Project #${projectNumber}`}
+						</span>
+					</div>
+				</li>
+			</ol>
+		</nav>
+		<h1 id="project-title" class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white flex items-center gap-2">
+			<a
+				id="project-github-link"
+				href={`https://github.com/orgs/mataharibiz/projects/${projectNumber}`}
+				target="_blank"
+				rel="noopener noreferrer"
+				class="hover:underline flex items-center gap-2"
+			>
+				Project #{projectNumber}
+				<svg
+					class="w-5 h-5 text-gray-500 dark:text-gray-400"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+					></path>
+				</svg>
+			</a>
+		</h1>
+		{project && (
+			<p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+				Total {project.total_items} items
+			</p>
+		)}
+	</div>
+</div>
+
+{error && (
+	<div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 m-4" role="alert">
+		<span class="font-medium">Error!</span> {error}
+	</div>
+)}
+
+{project && (
+	<div class="p-4">
+		<!-- Hidden data element for client script -->
+		<div id="project-detail-data" data-project={JSON.stringify(project)} class="hidden"></div>
+
+		<!-- Horizontal Bar Progress - Main Chart -->
+		<div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+			<div class="flex items-center justify-between mb-4">
+				<div class="flex-shrink-0">
+					<span class="text-xl font-bold leading-none text-gray-900 sm:text-2xl dark:text-white">
+						{project.total_items}
+					</span>
+					<h3 class="text-base font-light text-gray-500 dark:text-gray-400">
+						Horizontal Bar Progress
+					</h3>
+				</div>
+			</div>
+			<div class="w-full">
+				{sortStatusEntries(Object.entries(project.status)).map(([status, count]) => {
+					const percentage = ((count / project.total_items) * 100).toFixed(1);
+					return (
+						<div class="flex items-center mb-3">
+							<div class="w-32 text-sm font-medium dark:text-white truncate" title={status}>
+								{status}
+							</div>
+							<div class="flex-1 bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mx-2">
+								<div
+									class="bg-primary-600 h-2.5 rounded-full dark:bg-primary-500"
+									style={`width: ${percentage}%`}
+								></div>
+							</div>
+							<div class="w-20 text-sm font-medium text-gray-500 dark:text-gray-400 text-right">
+								{percentage}%
+							</div>
+						</div>
+					);
+				})}
+			</div>
+		</div>
+
+		<!-- Stats Cards -->
+		<div class="grid w-full grid-cols-1 gap-4 mb-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
+			{sortStatusEntries(Object.entries(project.status)).map(([status, count]) => {
+				const percentage = ((count / project.total_items) * 100).toFixed(1);
+				return (
+					<div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800">
+						<h3 class="text-base font-normal text-gray-500 dark:text-gray-300">
+							{status}
+						</h3>
+						<span class="text-2xl font-bold leading-none text-gray-900 sm:text-3xl dark:text-white">
+							{count}
+						</span>
+						<p class="mt-2 text-sm text-gray-500 dark:text-gray-300">
+							{percentage}% of total
+						</p>
+					</div>
+				);
+			})}
+		</div>
+
+		<!-- Charts Grid -->
+		<div class="grid grid-cols-1 gap-4 mb-4 xl:grid-cols-2">
+			<!-- Line Chart -->
+			<div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+				<div class="flex items-center justify-between mb-4">
+					<h3 class="text-lg font-semibold text-gray-900 dark:text-white">Line Chart</h3>
+				</div>
+				<div id="line-chart"></div>
+			</div>
+
+			<!-- Donut Chart -->
+			<div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+				<div class="flex items-center justify-between mb-4">
+					<h3 class="text-lg font-semibold text-gray-900 dark:text-white">Donut Chart</h3>
+				</div>
+				<div id="donut-chart"></div>
+			</div>
+		</div>
+
+		<!-- Additional Charts Grid -->
+		<div class="grid grid-cols-1 gap-4 xl:grid-cols-2">
+			<!-- Pie Chart -->
+			<div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+				<div class="flex items-center justify-between mb-4">
+					<div class="flex-shrink-0">
+						<span class="text-xl font-bold leading-none text-gray-900 sm:text-2xl dark:text-white">
+							{project.total_items}
+						</span>
+						<h3 class="text-base font-light text-gray-500 dark:text-gray-400">
+							Pie Chart
+						</h3>
+					</div>
+				</div>
+				<div id="pie-chart"></div>
+			</div>
+
+			<!-- Colored Bar Chart -->
+			<div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+				<div class="flex items-center justify-between mb-4">
+					<div class="flex-shrink-0">
+						<span class="text-xl font-bold leading-none text-gray-900 sm:text-2xl dark:text-white">
+							{project.total_items}
+						</span>
+						<h3 class="text-base font-light text-gray-500 dark:text-gray-400">
+							Colored Bar Chart
+						</h3>
+					</div>
+				</div>
+				<div id="colored-bar-chart"></div>
+			</div>
+		</div>
+	</div>
+)}

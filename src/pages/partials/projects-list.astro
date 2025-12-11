@@ -1,0 +1,24 @@
+---
+import ProjectsListTable from '../../components/ProjectsListTable.astro';
+import type { Projects } from '../../types/entities';
+
+export const partial = true;
+
+const API_BASE_URL = import.meta.env.PUBLIC_API_BASE_URL;
+
+let projects: Projects = [];
+let error: string | null = null;
+
+try {
+	const response = await fetch(`${API_BASE_URL}/projects`);
+	if (!response.ok) {
+		throw new Error(`HTTP error! status: ${response.status}`);
+	}
+	projects = await response.json();
+} catch (e) {
+	error = e instanceof Error ? e.message : 'Failed to fetch projects';
+	console.error('Error fetching projects:', e);
+}
+---
+
+<ProjectsListTable projects={projects} error={error} />
